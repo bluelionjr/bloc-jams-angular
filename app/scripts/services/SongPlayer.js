@@ -39,6 +39,16 @@
                 });
             });
             
+            currentBuzzObject.bind('ended', function(event) {
+                SongPlayer.next();
+            });
+            
+            // Why doesn't this work:
+//            if (currentBuzzObject.ended) {
+//                SongPlaer.next();
+//            };
+            
+            
             SongPlayer.currentSong = song;
         };
         
@@ -50,6 +60,7 @@
         var playSong = function(song) {
             currentBuzzObject.play();
             song.playing = true;
+            SongPlayer.muted = false;
         };
         
         /**
@@ -88,6 +99,12 @@
         * @type {Number}
         */
         SongPlayer.volume = 80;
+        
+        /**
+        * @desc tracks if the player is muted
+        * @type {Boolean}
+        */
+        SongPlayer.muted = false;
         
         // Public methods
         /**
@@ -154,6 +171,7 @@
             }
         };
         
+        
         /**
         * @function setCurrentTime
         * @desc Set current time (in seconds) of currently playing song
@@ -174,8 +192,27 @@
             if (currentBuzzObject) {
                 currentBuzzObject.setVolume(volume);
             }
-            //SongPlayer.volume = volume;
+            
         };
+        
+        /**
+        * @function toggleMute
+        * @desc mutes or unmutes current playing song
+        */
+        
+        SongPlayer.toggleMute = function() {
+            if (currentBuzzObject) {
+                if(!currentBuzzObject.isMuted()) {
+                    currentBuzzObject.mute();
+                    SongPlayer.muted = true;
+                } else {
+                    currentBuzzObject.unmute();
+                    SongPlayer.muted = false;
+                }
+            }
+        }
+        
+        
         
         return SongPlayer;
     }
